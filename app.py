@@ -114,8 +114,6 @@ def page_3():
             if audio_data is not None:
                 st.success("Recording completed!")
 
-                # Display the recorded audio
-                st.audio(audio_data)  # Play back the audio file
 
                 # Save the audio if needed
                 file_path = "recorded_audio.wav"
