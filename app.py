@@ -127,7 +127,7 @@ def page_3():
 
                     # Check if the file has been created successfully
                     if os.path.exists(file_path):
-                        st.audio(file_path)  # Play back the audio file
+                        st.write(file_path)  # Play back the audio file
 
                         # Send audio to API
                         with open(file_path, "rb") as file:
