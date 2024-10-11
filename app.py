@@ -91,6 +91,11 @@ def page_2():
 def page_3():
 
     """Page for converting speech to text."""
+    import streamlit as st
+    import sounddevice as sd
+    import wavio
+    import requests
+    import os
 
 
 
@@ -102,7 +107,7 @@ def page_3():
     headers = {"Authorization": "Bearer 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"}
 
 
-
+    '''
     def record_audio():
         st.title("Audio Recorder")
 
@@ -175,7 +180,56 @@ def page_3():
 
 
     record_audio()
+    '''
 
+    def record_audio():
+        st.title("Audio Recorder")
+
+        # Set up audio recording parameters
+        CHANNELS = 1
+        RATE = 44100
+        RECORD_SECONDS = st.slider("Select recording duration (seconds):", 1, 30, 5)
+
+        if st.button("Start Recording"):
+            st.info("Recording...")
+
+            # Record audio
+            audio_data = sd.rec(int(RATE * RECORD_SECONDS), samplerate=RATE, channels=CHANNELS, dtype='int16')
+            sd.wait()  # Wait until recording is finished
+
+            # Save the audio as a WAV file
+            file_path = "recorded_audio.wav"
+            wavio.write(file_path, audio_data, RATE, sampwidth=2)
+
+            st.success("Recording completed!")
+            st.audio(file_path)  # Play back the audio file
+
+            # Read the audio file and send to the API
+            if os.path.exists(file_path):
+                with open(file_path, "rb") as file:
+                    audio_data = file.read()  # Read the file contents
+                    response = requests.post(API_URL, headers=headers, data=audio_data)
+
+                    # Handle API response
+                    if response.status_code == 200:
+                        output = response.json()
+                        st.write(f"Extracted from speech record: {output['text'].lower()}")
+                    else:
+                        st.error(f"API request failed with status code {response.status_code}")
+            else:
+                st.error("No audio recorded. Please try again.")
+
+            # Provide download option
+            with open(file_path, "rb") as file:
+                st.download_button(
+                    label="Download Recorded Audio",
+                    data=file,
+                    file_name="recorded_audio.wav",
+                    mime="audio/wav"
+                )
+
+    # Call the function to run the audio recorder
+    record_audio()
     def query():
             uploaded_file = st.file_uploader("Choose an speech file", type=["wav", "mp3"])
             if uploaded_file is not None:  # Check if a file has been uploaded

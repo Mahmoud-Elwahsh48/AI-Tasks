@@ -10,5 +10,7 @@ numpy
 scipy
 pydub
 requests
-pydub  
+wavio
+sounddevice
+os 
 wave
