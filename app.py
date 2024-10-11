@@ -186,7 +186,7 @@ def page_3():
         RECORD_SECONDS = st.slider("Select recording duration (seconds):", 1, 30, 5)
 
         # Use experimental audio input for recording
-        audio_data = st.experimental_audio_input("Record Audio", duration=RECORD_SECONDS)
+        audio_data = st.experimental_audio_input("Record Audio")
 
         if audio_data:
             # Get the recorded audio bytes
