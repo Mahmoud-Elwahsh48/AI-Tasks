@@ -8,8 +8,8 @@ Pillow
 gensim
 numpy
 scipy
-pydub==0.25.1
-requests==2.32.3
-subprocess
 
+requests==2.32.3
+sounddevice 
+librosa
 wave
