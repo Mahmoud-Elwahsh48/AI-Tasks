@@ -8,9 +8,9 @@ Pillow
 gensim
 numpy
 scipy
-pydub
-requests
-wavio
-sounddevice
-os 
+pydub==0.25.1
+requests==2.32.3
+wavio==0.0.9
+sounddevice==0.5.0
+
 wave
