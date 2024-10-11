@@ -1,0 +1,6 @@
+git init
+git add .
+git commit -m "initial commit"
+get remote add origin https://github.com/Mahmoud-Elwahsh48/AI-Tasks.git
+git push --force origin master 
+
