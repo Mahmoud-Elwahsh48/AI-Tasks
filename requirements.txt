@@ -11,5 +11,6 @@ scipy
 
 requests==2.32.3
 sounddevice 
+portaudio19-dev
 librosa
 wave

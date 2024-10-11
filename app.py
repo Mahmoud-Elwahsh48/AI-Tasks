@@ -89,11 +89,7 @@ def page_2():
 def page_3():
 
     """Page for converting speech to text."""
-    import streamlit as st
-    import sounddevice as sd
-    import wavio
-    import requests
-    import os
+  
 
 
 
