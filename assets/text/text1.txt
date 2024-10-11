@@ -1,0 +1,10 @@
+Computer programming is how people can communicate and interact with computers. 
+Learn about some common programming languages and steps to begin building experience.
+
+Computer programming refers to the act of using different languages to communicate with and instruct computers. 
+Programming languages are those that computers can read, and there are different languages to accomplish different tasks.
+
+Programming makes it possible to do many of the activities we do each day, like using our computers or phones, 
+as well as powering the systems that surround us, such as financial services and banking.
+Explore more about computer programming and coding languages below.  
+

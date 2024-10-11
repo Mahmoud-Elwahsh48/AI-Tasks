@@ -1,0 +1,14 @@
+streamlit
+pandas
+transformers
+happytransformer
+torch
+nltk
+Pillow
+gensim
+numpy
+scipy
+pydub
+requests
+pyaudio
+wave
