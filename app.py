@@ -190,7 +190,7 @@ def page_3():
                 st.audio(audio_data)  # Play back the audio file
 
                 # Save the audio if needed
-                file_path = "D:\\IBMdatascientist\\Projects1,6\\Namedentityrecognition\\recorded_audio.wav"
+                file_path = "recorded_audio.wav"
 
                 # Check if the audio_data has the proper format for saving
                 if hasattr(audio_data, "getvalue"):
@@ -206,7 +206,7 @@ def page_3():
                         # Handle API response
                         if response.status_code == 200:
                             output = response.json()
-                            st.write(f"Extracted from speech record: {output['text'].lower()}")
+                            st.write(f"Extracted from speech record: {output.lower()}")
                         else:
                             st.error(f"API request failed with status code {response.status_code}")
                 else:
