@@ -89,7 +89,7 @@ def page_2():
 def page_3():
 
     """Page for converting speech to text."""
-  
+
 
 
 
@@ -175,94 +175,30 @@ def page_3():
 
     record_audio()
     '''
-    '''
-    def record_audio():
-        st.title("Audio Recorder")
-
-        # Set up audio recording parameters
-        CHANNELS = 1
-        RATE = 44100
-        RECORD_SECONDS = st.slider("Select recording duration (seconds):", 1, 30, 5)
-
-        if st.button("Start Recording"):
-            st.info("Recording...")
-
-            # Record audio
-            audio_data = sd.rec(int(RATE * RECORD_SECONDS), samplerate=RATE, channels=CHANNELS, dtype='int16')
-            sd.wait()  # Wait until recording is finished
-
-            # Save the audio as a WAV file
-            file_path = "recorded_audio.wav"
-            wavio.write(file_path, audio_data, RATE, sampwidth=2)
-
-            st.success("Recording completed!")
-            st.audio(file_path)  # Play back the audio file
-
-            # Read the audio file and send to the API
-            if os.path.exists(file_path):
-                with open(file_path, "rb") as file:
-                    audio_data = file.read()  # Read the file contents
-                    response = requests.post(API_URL, headers=headers, data=audio_data)
-
-                    # Handle API response
-                    if response.status_code == 200:
-                        output = response.json()
-                        st.write(f"Extracted from speech record: {output['text'].lower()}")
-                    else:
-                        st.error(f"API request failed with status code {response.status_code}")
-            else:
-                st.error("No audio recorded. Please try again.")
-
-            # Provide download option
-            with open(file_path, "rb") as file:
-                st.download_button(
-                    label="Download Recorded Audio",
-                    data=file,
-                    file_name="recorded_audio.wav",
-                    mime="audio/wav"
-                )
-
-    # Call the function to run the audio recorder
-    record_audio()
-    '''
     import streamlit as st
-    import sounddevice as sd
-    import wave
-    import numpy as np
-    import librosa
     import requests
     import os
 
     def record_audio():
         st.title("Audio Recorder")
 
-        # Set up audio recording parameters
-        SAMPLE_RATE = 44100  # Sample rate in Hz
+        # Set up recording duration
         RECORD_SECONDS = st.slider("Select recording duration (seconds):", 1, 30, 5)
 
-        if st.button("Start Recording"):
-            st.info("Recording...")
+        # Use experimental audio input for recording
+        audio_data = st.experimental_audio_input("Record Audio", duration=RECORD_SECONDS)
 
-            # Record audio
-            audio_data = sd.rec(int(RECORD_SECONDS * SAMPLE_RATE), samplerate=SAMPLE_RATE, channels=1, dtype='int16')
-            sd.wait()  # Wait until the recording is finished
-
-            st.success("Recording completed!")
+        if audio_data:
+            # Get the recorded audio bytes
+            audio_bytes = audio_data["audio"]
 
             # Save the audio as a WAV file
             file_path = "recorded_audio.wav"
-            with wave.open(file_path, 'wb') as wf:
-                wf.setnchannels(1)
-                wf.setsampwidth(2)  # 2 bytes for int16
-                wf.setframerate(SAMPLE_RATE)
-                wf.writeframes(audio_data.tobytes())
+            with open(file_path, "wb") as wf:
+                wf.write(audio_bytes)
 
+            st.success("Recording completed!")
             st.audio(file_path)  # Play back the audio file
-
-            # Analyze audio with librosa (optional)
-            audio, sr = librosa.load(file_path, sr=SAMPLE_RATE)
-            # Example: Display the duration
-            st.write(f"Audio duration: {librosa.get_duration(y=audio, sr=sr):.2f} seconds")
 
             # Read the audio file and send to the API
             if os.path.exists(file_path):
@@ -288,8 +224,8 @@ def page_3():
                     mime="audio/wav"
                 )
 
-    # Call the function to run the audio recorder
     record_audio()
+
     def query():
             uploaded_file = st.file_uploader("Choose an speech file", type=["wav", "mp3"])
             if uploaded_file is not None:  # Check if a file has been uploaded
