@@ -110,39 +110,42 @@ def page_3():
         if st.button("Start Recording"):
             audio_data = st.experimental_audio_input("Record Audio")
 
-            if audio_data is not None:
-                st.success("Recording completed!")
+            if audio_data:
+                st.audio(audio_data)
 
-                # Display the recorded audio
-                st.audio(audio_data)  # Play back the audio file
+                if audio_data is not None:
+                    st.success("Recording completed!")
 
-                # Save the audio if needed
-                file_path = "recorded_audio.wav"
+                    # Display the recorded audio
+                    st.audio(audio_data)  # Play back the audio file
 
-     
-                # Send audio to API
-                if os.path.exists(file_path):
+                    # Save the audio if needed
+                    file_path = "recorded_audio.wav"
+
+
+                    # Send audio to API
+                    if os.path.exists(file_path):
+                        with open(file_path, "rb") as file:
+                            audio_content = file.read()  # Read the file contents
+                            response = requests.post(API_URL, headers=headers, data=audio_content)
+
+                            # Handle API response
+                            if response.status_code == 200:
+                                output = response.json()
+                                st.write(f"Extracted from speech record: {output}")
+                            else:
+                                st.error(f"API request failed with status code {response.status_code}")
+                    else:
+                        st.error("No audio recorded. Please try again.")
+
+                    # Provide download option
                     with open(file_path, "rb") as file:
-                        audio_content = file.read()  # Read the file contents
-                        response = requests.post(API_URL, headers=headers, data=audio_content)
-
-                        # Handle API response
-                        if response.status_code == 200:
-                            output = response.json()
-                            st.write(f"Extracted from speech record: {output}")
-                        else:
-                            st.error(f"API request failed with status code {response.status_code}")
-                else:
-                    st.error("No audio recorded. Please try again.")
-
-                # Provide download option
-                with open(file_path, "rb") as file:
-                    st.download_button(
-                        label="Download Recorded Audio",
-                        data=file,
-                        file_name="recorded_audio.wav",
-                        mime="audio/wav"
-                    )
+                        st.download_button(
+                            label="Download Recorded Audio",
+                            data=file,
+                            file_name="recorded_audio.wav",
+                            mime="audio/wav"
+                        )
 
     record_audio()
     def query():
