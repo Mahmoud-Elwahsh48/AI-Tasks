@@ -20,7 +20,6 @@ import re
 import numpy as np
 from scipy.io.wavfile import write
 
-from pydub import AudioSegment
 import requests
 import uuid
 import wave
