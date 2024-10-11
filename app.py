@@ -24,7 +24,6 @@ from pydub import AudioSegment
 import requests
 import uuid
 import wave
-import pyaudio
 
 import os
 
