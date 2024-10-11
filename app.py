@@ -175,55 +175,53 @@ def page_3():
 
     record_audio()
     '''
-    import streamlit as st
-    import requests
-    import os
 
     def record_audio():
         st.title("Audio Recorder")
 
+        # Start recording button
+        if st.button("Start Recording"):
+            audio_data = st.experimental_audio_input("Record Audio")
 
-        # Use experimental audio input for recording
-        audio_data = st.experimental_audio_input("Record Audio")
+            if audio_data is not None:
+                st.success("Recording completed!")
 
-        if audio_data:
-            # Get the recorded audio bytes
-            audio_bytes = audio_data["audio"]
+                # Display the recorded audio
+                st.audio(audio_data)  # Play back the audio file
 
-            # Save the audio as a WAV file
-            file_path = "recorded_audio.wav"
-            with open(file_path, "wb") as wf:
-                wf.write(audio_bytes)
+                # Save the audio if needed
+                file_path = "D:\\IBMdatascientist\\Projects1,6\\Namedentityrecognition\\recorded_audio.wav"
 
-            st.success("Recording completed!")
-            st.audio(file_path)  # Play back the audio file
+                # Check if the audio_data has the proper format for saving
+                if hasattr(audio_data, "getvalue"):
+                    with open(file_path, "wb") as wf:
+                        wf.write(audio_data.getvalue())  # Save the recorded audio to a file
 
-            # Read the audio file and send to the API
-            if os.path.exists(file_path):
+                # Send audio to API
+                if os.path.exists(file_path):
+                    with open(file_path, "rb") as file:
+                        audio_content = file.read()  # Read the file contents
+                        response = requests.post(API_URL, headers=headers, data=audio_content)
+
+                        # Handle API response
+                        if response.status_code == 200:
+                            output = response.json()
+                            st.write(f"Extracted from speech record: {output['text'].lower()}")
+                        else:
+                            st.error(f"API request failed with status code {response.status_code}")
+                else:
+                    st.error("No audio recorded. Please try again.")
+
+                # Provide download option
                 with open(file_path, "rb") as file:
-                    audio_data = file.read()  # Read the file contents
-                    response = requests.post(API_URL, headers=headers, data=audio_data)
-
-                    # Handle API response
-                    if response.status_code == 200:
-                        output = response.json()
-                        st.write(f"Extracted from speech record: {output['text'].lower()}")
-                    else:
-                        st.error(f"API request failed with status code {response.status_code}")
-            else:
-                st.error("No audio recorded. Please try again.")
-
-            # Provide download option
-            with open(file_path, "rb") as file:
-                st.download_button(
-                    label="Download Recorded Audio",
-                    data=file,
-                    file_name="recorded_audio.wav",
-                    mime="audio/wav"
-                )
+                    st.download_button(
+                        label="Download Recorded Audio",
+                        data=file,
+                        file_name="recorded_audio.wav",
+                        mime="audio/wav"
+                    )
 
     record_audio()
-
     def query():
             uploaded_file = st.file_uploader("Choose an speech file", type=["wav", "mp3"])
             if uploaded_file is not None:  # Check if a file has been uploaded
