@@ -101,7 +101,7 @@ def page_3():
     headers = {"Authorization": "Bearer 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"}
 
 
-   
+
 
     def record_audio():
         st.title("Audio Recorder")
@@ -119,11 +119,7 @@ def page_3():
                 # Save the audio if needed
                 file_path = "recorded_audio.wav"
 
-                # Check if the audio_data has the proper format for saving
-                if hasattr(audio_data, "getvalue"):
-                    with open(file_path, "wb") as wf:
-                        wf.write(audio_data.getvalue())  # Save the recorded audio to a file
-
+     
                 # Send audio to API
                 if os.path.exists(file_path):
                     with open(file_path, "rb") as file:
@@ -133,7 +129,7 @@ def page_3():
                         # Handle API response
                         if response.status_code == 200:
                             output = response.json()
-                            st.write(f"Extracted from speech record: {output.lower()}")
+                            st.write(f"Extracted from speech record: {output}")
                         else:
                             st.error(f"API request failed with status code {response.status_code}")
                 else:
